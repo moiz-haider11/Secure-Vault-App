@@ -63,7 +63,7 @@ Terminal 1 (Backend):
 cd backend
 npm start
 ```
-Server will run on http://localhost:5000
+Server will run on https://secure-vault-api.vercel.app
 
 Terminal 2 (Frontend):
 
