@@ -1,35 +1,40 @@
-require('dotenv').config();
 const express = require('express');
+const mongoose = require('mongoose');
 const cors = require('cors');
-const connectDB = require('./config/db'); // Database logic
-
-// Routes Import karna
+const dotenv = require('dotenv');
 const authRoutes = require('./routes/authRoutes');
-const vaultRoutes = require('./routes/vaultRoutes'); // <--- Yeh naya wala hai
+const vaultRoutes = require('./routes/vaultRoutes');
+
+dotenv.config();
 
 const app = express();
 
-// --- Middleware ---
-app.use(express.json()); // JSON data parhne ke liye
-app.use(cors()); // Frontend connection allow karne ke liye
+// Middleware
+app.use(express.json());
+app.use(cors());
 
-// --- Database Connection ---
-connectDB();
+// Database Connection
+mongoose.connect(process.env.MONGO_URI)
+  .then(() => console.log('MongoDB Connected Successfully'))
+  .catch(err => console.log(err));
 
-// --- Routes Mount Karna ---
-// 1. Authentication (Register/Login)
+// Routes
 app.use('/api/auth', authRoutes);
-
-// 2. Vault Items (Create/Access Secrets)
 app.use('/api/vault', vaultRoutes);
 
-// Test Route (Check karne ke liye)
+// Test Route
 app.get('/', (req, res) => {
-    res.send('API is running... Vault App Backend');
+  res.send('Secure Vault API is Running...');
 });
 
-// --- Server Start ---
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
+
+// 👇 VERCEL CHANGE: Sirf local development mein listen karega
+if (process.env.NODE_ENV !== 'production') {
+  app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
-});
+  });
+}
+
+// 👇 VERCEL CHANGE: App ko export karna zaroori hai
+module.exports = app;
