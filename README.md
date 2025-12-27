@@ -3,7 +3,7 @@
 Secure Vault is a full-stack web application designed to share sensitive information (like passwords, API keys, or secret notes) securely. Once the conditions (Time or View Limit) are met, the secret is permanently deleted from the database.
 
 ## 🚀 Live Demo
-*(Link will be added after deployment)*
+[Deployment link](https://secure-vault-frontend-weld.vercel.app/)
 
 ## ✨ Features
 
