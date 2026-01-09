@@ -7,15 +7,14 @@ exports.registerUser = async (req, res) => {
     try {
         const { username, email, password } = req.body;
 
-        // Check agar user pehle se hai
         let user = await User.findOne({ email });
         if (user) return res.status(400).json({ message: 'User already exists' });
 
-        // Password hash karo (Security requirement)
+        // Password hash (Security requirement)
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
 
-        // User save karo
+        // User save 
         user = new User({ username, email, password: hashedPassword });
         await user.save();
 
@@ -30,15 +29,15 @@ exports.loginUser = async (req, res) => {
     try {
         const { email, password } = req.body;
 
-        // User dhoondo
+        // User 
         const user = await User.findOne({ email });
         if (!user) return res.status(400).json({ message: 'Invalid Credentials' });
 
-        // Password match karo
+        // Password match 
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) return res.status(400).json({ message: 'Invalid Credentials' });
 
-        // JWT Token banao (Is se user login rahega)
+        // JWT Token 
         const payload = { userId: user._id };
         const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' });
 
